@@ -65,6 +65,7 @@ final class CustomPopoverController: UIViewController, UIAdaptivePresentationCon
 
     private lazy var segmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl(items: ["280pt", "150pt"])
+        segmentedControl.selectedSegmentIndex = 0
         segmentedControl.addTarget(self,
                                    action: #selector(changePopoverHeight(_:)),
                                    for: .valueChanged)
