@@ -57,28 +57,6 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
                                    traitCollection: UITraitCollection)-> UIModalPresentationStyle {
         return .none
     }
-
-
-//    func presentationController(_ controller: UIPresentationController,
-//                                    viewControllerForAdaptivePresentationStyle style: UIModalPresentationStyle) -> UIViewController? {
-//            if let navController = controller.presentedViewController as? UINavigationController {
-//                navController.children.first?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(didTapClose(_:)))
-//    }
-//    return controller.presentedViewController
-//    }
-//
-//
-//    func presentationController(_ presentationController: UIPresentationController,
-//                                    willPresentWithAdaptiveStyle style: UIModalPresentationStyle,
-//                                    transitionCoordinator: UIViewControllerTransitionCoordinator?) {
-//            if let navController = presentationController.presentedViewController as? UINavigationController, style == .none {
-//                navController.children.first?.navigationItem.rightBarButtonItem = nil
-//    }
-//    }
-//
-//    @objc private func didTapClose(_ sender: Any) {
-//        dismiss(animated: true, completion: nil)
-//    }
 }
 
 final class CustomPopoverController: UIViewController {
@@ -91,12 +69,23 @@ final class CustomPopoverController: UIViewController {
         return segmentedControl
     }()
 
+    private lazy var closeButtonView: UIButton = {
+        let button = UIButton(configuration: .plain())
+        button.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+        button.tintColor = .systemGray2
+        button.addTarget(self,
+                         action: #selector(dismissPopover),
+                         for: .touchUpInside)
+
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0)
+        view.backgroundColor = .systemGray5
         view.addSubview(segmentedControl)
+        view.addSubview(closeButtonView)
     }
 
     override func viewWillLayoutSubviews() {
@@ -105,16 +94,23 @@ final class CustomPopoverController: UIViewController {
         segmentedControl.sizeToFit()
         segmentedControl.center.x = view.frame.width / 2
         segmentedControl.frame.origin.y = view.safeAreaInsets.top +  5
+
+        closeButtonView.sizeToFit()
+        closeButtonView.frame.origin.x = view.frame.width - closeButtonView.frame.width
+        closeButtonView.frame.origin.y = view.safeAreaInsets.top +  5
     }
 
     @objc private func changePopoverHeight(_ sender: UISegmentedControl) {
         let selectedIndex = sender.selectedSegmentIndex
-
 
         if selectedIndex == 0 {
             self.preferredContentSize.height = 280
         } else {
             self.preferredContentSize.height = 150
         }
+    }
+
+    @objc private func dismissPopover() {
+        dismiss(animated: true, completion: nil)
     }
 }
