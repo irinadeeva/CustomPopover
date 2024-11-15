@@ -40,9 +40,7 @@ final class ViewController: UIViewController {
 
         if let popoverPresentationController = vc.popoverPresentationController {
             popoverPresentationController.permittedArrowDirections = .up
-            // Set the source rect (the bounds of the button)
             popoverPresentationController.sourceRect = sender.bounds
-            // Set the source view (the button)
             popoverPresentationController.sourceView = sender
 
             popoverPresentationController.delegate = self
@@ -54,12 +52,17 @@ final class ViewController: UIViewController {
 
 extension ViewController: UIPopoverPresentationControllerDelegate {
     func adaptivePresentationStyle(for controller: UIPresentationController,
-                                   traitCollection: UITraitCollection)-> UIModalPresentationStyle {
+                                   traitCollection: UITraitCollection) -> UIModalPresentationStyle {
         return .none
     }
 }
 
 final class CustomPopoverController: UIViewController, UIAdaptivePresentationControllerDelegate {
+    private enum PopoverSize {
+        static let fullHeight: CGFloat = 280
+        static let compactHeight: CGFloat = 150
+    }
+
     private lazy var segmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl(items: ["280pt", "150pt"])
         segmentedControl.addTarget(self,
@@ -107,13 +110,7 @@ final class CustomPopoverController: UIViewController, UIAdaptivePresentationCon
     }
 
     @objc private func changePopoverHeight(_ sender: UISegmentedControl) {
-        let selectedIndex = sender.selectedSegmentIndex
-
-        if selectedIndex == 0 {
-            self.preferredContentSize.height = 280
-        } else {
-            self.preferredContentSize.height = 150
-        }
+        preferredContentSize.height = sender.selectedSegmentIndex == 0 ? PopoverSize.fullHeight : PopoverSize.compactHeight
     }
 
     @objc private func dismissPopover() {
