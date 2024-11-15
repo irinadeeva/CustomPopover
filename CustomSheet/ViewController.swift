@@ -59,7 +59,7 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
     }
 }
 
-final class CustomPopoverController: UIViewController {
+final class CustomPopoverController: UIViewController, UIAdaptivePresentationControllerDelegate {
     private lazy var segmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl(items: ["280pt", "150pt"])
         segmentedControl.addTarget(self,
@@ -86,6 +86,8 @@ final class CustomPopoverController: UIViewController {
         view.backgroundColor = .systemGray5
         view.addSubview(segmentedControl)
         view.addSubview(closeButtonView)
+
+        self.presentationController?.delegate = self
     }
 
     override func viewWillLayoutSubviews() {
@@ -98,6 +100,10 @@ final class CustomPopoverController: UIViewController {
         closeButtonView.sizeToFit()
         closeButtonView.frame.origin.x = view.frame.width - closeButtonView.frame.width
         closeButtonView.frame.origin.y = view.safeAreaInsets.top +  5
+    }
+
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        false
     }
 
     @objc private func changePopoverHeight(_ sender: UISegmentedControl) {
